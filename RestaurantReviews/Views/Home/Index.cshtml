@@ -5,14 +5,14 @@
 @foreach (var item in Model) {
 
                     <div class="post-preview">
-                        <a href="post.html">
+                        <a asp-controller="Reviews" asp-action="Details" asp-route-id="@item.Id">
                             <h2 class="post-title">@Html.DisplayFor(modelItem => item.Name)</h2>
-                            <h3 class="post-subtitle">Problems look mighty small from 150 miles up</h3>
-                        </a>
+                            <h3 class="post-subtitle">@Html.DisplayFor(modelItem => item.Bullet)</h3>
+                            </a>
                         <p class="post-meta">
                             Posted by
                             <a href="#!">Start Bootstrap</a>
-                            on September 24, 2022
+                            on @Html.DisplayFor(modelItem => item.CreatedDate)
                         </p>
                     </div>
                     <!-- Divider-->

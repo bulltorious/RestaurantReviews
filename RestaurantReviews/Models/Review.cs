@@ -24,5 +24,6 @@ namespace RestaurantReviews.Models
         public DateTime CreatedDate { get; set; }
 
 
+
     }
 }
