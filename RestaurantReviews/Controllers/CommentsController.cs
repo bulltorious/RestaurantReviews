@@ -49,7 +49,7 @@ namespace RestaurantReviews.Controllers
         // GET: Comments/Create
         public IActionResult Create()
         {
-            ViewData["ReviewId"] = new SelectList(_context.Review, "Id", "Id");
+            ViewData["ReviewId"] = new SelectList(_context.Review, "Id", "Name");
             return View();
         }
 

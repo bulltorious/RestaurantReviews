@@ -9,10 +9,10 @@ namespace RestaurantReviews.Models
         public string? Name { get; set; }
 
         [Column(TypeName = "decimal(14,2)")]
-        [Range(0, 4)]
+        [Range(0, 5)]
         public decimal Price { get; set; }
         [Column(TypeName = "decimal(14,2)")]
-        [Range(0, 4)]
+        [Range(0, 5)]
         public decimal Rating { get; set; }
 
         public string? Text { get; set; }

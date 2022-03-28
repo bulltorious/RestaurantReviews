@@ -69,6 +69,13 @@
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="~/css/styles.css" rel="stylesheet" />
+        <!-- Star Rating CSS -->
+        <link href="~/css/star-rating.css" rel="stylesheet" />
+        <link href="~/themes/krajee-fa/theme.css" rel="stylesheet" />
+        <link href="~/themes/krajee-svg/theme.css" rel="stylesheet" />
+        <link href="~/themes/krajee-uni/theme.css" rel="stylesheet" />
+        
+
     </head>
     <body>
         <!-- Navigation-->
@@ -83,6 +90,7 @@
                     <ul class="navbar-nav ms-auto py-4 py-lg-0">
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/">Home</a></li>
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="about.html">About</a></li>
+                        <partial name="_LoginPartial_Theme" />
 
                         <!-- <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="contact.html">Contact</a></li> -->
                     </ul>
@@ -148,9 +156,24 @@
             </div>
         </footer>
         <!-- Bootstrap core JS-->
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="~/js/site.js" asp-append-version="true"></script>
+        <!-- Star Rating JS -->
+        <script src="~/js/star-rating.js" asp-append-version="true"></script>
+        <script src="~/themes/krajee-fa/theme.js" asp-append-version="true"></script>
+        <script src="~/themes/krajee-svg/theme.js" asp-append-version="true"></script>
+        <script src="~/themes/krajee-gly/theme.js" asp-append-version="true"></script>
+        <script src="~/themes/krajee-uni/theme.js" asp-append-version="true"></script>
+        <script>
+
+$(document).ready(function(){
+    $('.stars').rating({displayOnly: true, step: 0.5});
+});
+</script>
+
+
         @await RenderSectionAsync("Scripts", required: false)
     </body>
 </html>

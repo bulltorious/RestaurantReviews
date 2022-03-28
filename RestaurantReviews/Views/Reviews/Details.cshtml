@@ -8,8 +8,28 @@
 
 <div>
    <h3 class="post-subtitle" style="font-weight:300">@Html.DisplayFor(model => model.Bullet)</h3>
-   <h5>Rating: @Html.DisplayFor(model => model.Rating) / 4</h5>
-   <h5>Price: @Html.DisplayFor(model => model.Price) / 4</h5>
+ 
+<table>
+  <tr>
+      <td valign="bottom"><h5>Rating: </h5></td>
+    <td>
+      <input value="@Html.DisplayFor(model => model.Rating)" class="rating-loading stars">
+    </td>
+    <td>Higher is better</td>
+  </tr>
+    <tr>
+      <td valign="bottom"><h5>Price: </h5></td>
+    <td>
+      <input value="@Html.DisplayFor(model => model.Price)" class="rating-loading stars">
+    </td>
+    <td>Higher is more expensive</td>
+  </tr>
+</table>
+
+<table>
+
+</table>
+
     <hr />
 
             <article class="mb-4">
