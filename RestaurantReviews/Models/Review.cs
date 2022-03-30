@@ -23,6 +23,8 @@ namespace RestaurantReviews.Models
 
         public DateTime CreatedDate { get; set; }
 
+        public ICollection<Comment> Comments { get; set; }    
+
 
 
     }

@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "About";
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>This is a simple restaurant review site I put together to remember my thoughts on various restaurants down here.</p>
+<p>It is written using ASP.NET Core 6, with a SQL Server back-end,  hosted on Azure.</p>
+<p>Contact me at : <a href="javascript:decryptEmail('YnVsbHllbGxpc0BnbWFpbC5jb20=');">Email</a> - click link to see email address.</p> 
+
+    <script>
+    
+    function decryptEmail(encoded) {
+      
+      var address = atob(encoded);
+      window.location.href = "mailto:" + address;
+      
+    }
+      
+    </script>

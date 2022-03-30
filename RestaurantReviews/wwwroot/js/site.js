@@ -27,3 +27,9 @@ window.addEventListener('DOMContentLoaded', () => {
         scrollPos = currentTop;
     });
 })
+
+// Star rating
+    $(document).ready(function () {
+        $('.stars').rating({ displayOnly: true, step: 0.5 });
+    });
+

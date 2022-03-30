@@ -22,6 +22,7 @@ namespace RestaurantReviews.Controllers
         }
 
         // GET: Reviews
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Review.ToListAsync());
@@ -41,6 +42,9 @@ namespace RestaurantReviews.Controllers
             {
                 return NotFound();
             }
+
+            var comments = await _context.Comment.Where(m => m.ReviewId == id).OrderByDescending(m => m.CreatedDate).ToListAsync();
+            review.Comments = comments;
 
             return View(review);
         }

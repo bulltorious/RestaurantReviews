@@ -247,9 +247,6 @@ namespace RestaurantReviews.Data.Migrations
                     b.Property<string>("Text")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ReviewId");
@@ -345,12 +342,17 @@ namespace RestaurantReviews.Data.Migrations
             modelBuilder.Entity("RestaurantReviews.Models.Comment", b =>
                 {
                     b.HasOne("RestaurantReviews.Models.Review", "Review")
-                        .WithMany()
+                        .WithMany("Comments")
                         .HasForeignKey("ReviewId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Review");
+                });
+
+            modelBuilder.Entity("RestaurantReviews.Models.Review", b =>
+                {
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }

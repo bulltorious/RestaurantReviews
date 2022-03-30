@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,7 @@ namespace RestaurantReviews.Controllers
         }
 
         // GET: Comments
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Comment.Include(c => c.Review);
@@ -28,6 +30,7 @@ namespace RestaurantReviews.Controllers
         }
 
         // GET: Comments/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -47,9 +50,17 @@ namespace RestaurantReviews.Controllers
         }
 
         // GET: Comments/Create
+        [Authorize]
         public IActionResult Create()
         {
             ViewData["ReviewId"] = new SelectList(_context.Review, "Id", "Name");
+            //var reviews = new SelectList(_context.Review, "Id", "Id");
+            //var comment = new Comment();
+
+            //var viewModel = new CreateCommentViewModel();
+            //viewModel.Reviews = reviews;
+            //viewModel.Comment = comment;
+
             return View();
         }
 
@@ -58,19 +69,39 @@ namespace RestaurantReviews.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Email,Text,Title,CreatedDate,ReviewId")] Comment comment)
+        [Authorize]
+        public async Task<IActionResult> Create([Bind("Id,Name,Email,Text,CreatedDate,ReviewId")] Comment comment)
         {
-            if (ModelState.IsValid)
+            var targetReview = await _context.Review.FindAsync(comment.ReviewId);
+            
+            if (targetReview != null)
             {
                 _context.Add(comment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ReviewId"] = new SelectList(_context.Review, "Id", "Id", comment.ReviewId);
-            return View(comment);
+
+            ViewData["ReviewId"] = new SelectList(_context.Review, "Id", "Name");
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateFromReview(string name, string email, string commentText, int reviewId)
+        {
+            if (!(String.IsNullOrWhiteSpace(name) || String.IsNullOrWhiteSpace(email) || String.IsNullOrWhiteSpace(commentText)))
+            {
+                var comment = _context.Add(new Comment { Name = name, Email = email, Text = commentText, ReviewId = reviewId, CreatedDate = DateTime.Now });
+                await _context.SaveChangesAsync();
+            }
+
+
+            return LocalRedirect($"~/Reviews/Details/{reviewId}");
+
         }
 
         // GET: Comments/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -92,6 +123,7 @@ namespace RestaurantReviews.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Email,Text,Title,CreatedDate,ReviewId")] Comment comment)
         {
             if (id != comment.Id)
@@ -124,6 +156,7 @@ namespace RestaurantReviews.Controllers
         }
 
         // GET: Comments/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -145,6 +178,7 @@ namespace RestaurantReviews.Controllers
         // POST: Comments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var comment = await _context.Comment.FindAsync(id);

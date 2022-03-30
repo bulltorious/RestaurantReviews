@@ -203,6 +203,7 @@ dd {
 
 blockquote {
   margin: 0 0 1rem;
+
 }
 
 b,
@@ -11012,10 +11013,11 @@ p a {
   text-decoration: underline;
 }
 
-blockquote {
-  font-style: italic;
-  color: #6c757d;
+blockquote p {
+    
+    color: red;
 }
+
 
 .btn {
   letter-spacing: 0.0625em;
