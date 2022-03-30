@@ -64,12 +64,11 @@ namespace RestaurantReviews.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Price,Rating,Text,Bullet,Address,CreatedDate")] Review review)
         {
-            if (ModelState.IsValid)
-            {
+
                 _context.Add(review);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
+
             return View(review);
         }
 
@@ -103,8 +102,7 @@ namespace RestaurantReviews.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+
                 try
                 {
                     _context.Update(review);
@@ -122,7 +120,7 @@ namespace RestaurantReviews.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
+         
             return View(review);
         }
 
