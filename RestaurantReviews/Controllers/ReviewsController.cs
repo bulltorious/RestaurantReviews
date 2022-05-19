@@ -9,23 +9,29 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RestaurantReviews.Data;
 using RestaurantReviews.Models;
+using RestaurantReviews.Saphyre;
 
 namespace RestaurantReviews.Controllers
 {
     public class ReviewsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private GenericRepository<Review> _reviewRepository;
+        private GenericRepository<Comment> _commentRepository;
 
         public ReviewsController(ApplicationDbContext context)
         {
             _context = context;
+            _reviewRepository = new GenericRepository<Review>(_context);
+            _commentRepository = new GenericRepository<Comment>(_context);
+
         }
 
         // GET: Reviews
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Review.ToListAsync());
+            return View(_reviewRepository.GetAll());
         }
 
         // GET: Reviews/Details/5
@@ -36,14 +42,15 @@ namespace RestaurantReviews.Controllers
                 return NotFound();
             }
 
-            var review = await _context.Review
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var review = _reviewRepository.GetById(id);
+
             if (review == null)
             {
                 return NotFound();
             }
 
-            var comments = await _context.Comment.Where(m => m.ReviewId == id).OrderByDescending(m => m.CreatedDate).ToListAsync();
+            var comments = _commentRepository.GetAll().Where(m => m.ReviewId == id).OrderByDescending(m => m.CreatedDate).ToList();
+
             review.Comments = comments;
 
             return View(review);
@@ -65,11 +72,12 @@ namespace RestaurantReviews.Controllers
         public async Task<IActionResult> Create([Bind("Id,Name,Price,Rating,Text,Bullet,Address,CreatedDate")] Review review)
         {
 
-                _context.Add(review);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+            _reviewRepository.Insert(review);
+            _reviewRepository.Save();
 
-            return View(review);
+            return RedirectToAction(nameof(Index));
+
+
         }
 
         // GET: Reviews/Edit/5
@@ -81,7 +89,9 @@ namespace RestaurantReviews.Controllers
                 return NotFound();
             }
 
-            var review = await _context.Review.FindAsync(id);
+            var review = _reviewRepository.GetById(id);
+
+
             if (review == null)
             {
                 return NotFound();
@@ -103,25 +113,27 @@ namespace RestaurantReviews.Controllers
             }
 
 
-                try
+            try
+            {
+
+
+                _reviewRepository.Update(review);
+                _reviewRepository.Save();
+
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ReviewExists(review.Id))
                 {
-                    _context.Update(review);
-                    await _context.SaveChangesAsync();
+                    return NotFound();
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!ReviewExists(review.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
-                return RedirectToAction(nameof(Index));
-         
-            return View(review);
+            }
+            return RedirectToAction(nameof(Index));
+
         }
 
         // GET: Reviews/Delete/5
@@ -133,8 +145,8 @@ namespace RestaurantReviews.Controllers
                 return NotFound();
             }
 
-            var review = await _context.Review
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var review = _reviewRepository.GetById(id);
+
             if (review == null)
             {
                 return NotFound();
@@ -149,9 +161,11 @@ namespace RestaurantReviews.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var review = await _context.Review.FindAsync(id);
-            _context.Review.Remove(review);
-            await _context.SaveChangesAsync();
+
+
+            _reviewRepository.Delete(id);
+            _reviewRepository.Save();
+
             return RedirectToAction(nameof(Index));
         }
 

@@ -106,7 +106,7 @@ namespace RestaurantReviews.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
-        
+
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             //Just returning page because we don't want people to actually be able to register.
